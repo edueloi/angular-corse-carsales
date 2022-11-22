@@ -1,0 +1,225 @@
+{
+	"name": "vscode-standardjs",
+	"displayName": "StandardJS - JavaScript Standard Style (old version)",
+	"description": "Integrates JavaScript Standard Style into VS Code.",
+	"version": "1.4.1",
+	"author": "Sam Chen",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chenxsan/vscode-standardjs.git"
+	},
+	"bugs": {
+		"url": "https://github.com/chenxsan/vscode-standardjs/issues"
+	},
+	"publisher": "chenxsan",
+	"icon": "standard_icon.png",
+	"categories": [
+		"Linters",
+		"Formatters"
+	],
+	"keywords": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"vue"
+	],
+	"engines": {
+		"vscode": "^1.16.0"
+	},
+	"activationEvents": [
+		"*"
+	],
+	"main": "./client/out/extension",
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "JavaScript Standard Style",
+			"properties": {
+				"standard.enable": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Controls whether JavaScript Standard Style is enabled for JavaScript files or not."
+				},
+				"standard.nodePath": {
+					"scope": "resource",
+					"type": [
+						"string",
+						"null"
+					],
+					"default": null,
+					"description": "A path added to NODE_PATH when resolving the standard module."
+				},
+				"standard._legacyModuleResolve": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Uses the legacy module resolving."
+				},
+				"standard.options": {
+					"scope": "resource",
+					"type": "object",
+					"default": {},
+					"description": "The standard options object to provide args normally passed to JavaScript Standard Style when executed from a command line."
+				},
+				"standard.engine": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"standard",
+						"semistandard",
+						"standardx",
+						"ts-standard"
+					],
+					"default": "standard",
+					"description": "Controls whether VSCode should use an alternate Standard engine, like semistandard, standardx or ts-standard."
+				},
+				"standard.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VSCode and the JavaScript Standard Style linter service."
+				},
+				"standard.run": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"onSave",
+						"onType"
+					],
+					"default": "onType",
+					"description": "Run the linter on save (onSave) or on type (onType)"
+				},
+				"standard.autoFixOnSave": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Turns auto fix on save on or off."
+				},
+				"standard.workingDirectories": {
+					"scope": "resource",
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "object",
+								"properties": {
+									"directory": {
+										"type": "string",
+										"description": "The working directory to use if a file's path start with this directory."
+									},
+									"changeProcessCWD": {
+										"type": "boolean",
+										"description": "Whether the process's cwd should be changed as well."
+									}
+								}
+							}
+						]
+					}
+				},
+				"standard.validate": {
+					"scope": "resource",
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "object",
+								"properties": {
+									"language": {
+										"type": "string",
+										"description": "The language id to be validated by JavaScript Standard Style"
+									},
+									"autoFix": {
+										"type": "boolean",
+										"description": "Whether auto fixes are provided for the language"
+									}
+								}
+							}
+						]
+					},
+					"default": [
+						"javascript",
+						"javascriptreact",
+						"typescript",
+						"typescriptreact"
+					],
+					"description": "An array of language ids which should be validated by JavaScript Standard Style"
+				},
+				"standard.usePackageJson": {
+					"type": "boolean",
+					"default": false,
+					"description": "Activate JavaScript Standard Style based on project's package.json settings, use globally installed standard module if set to \"false\""
+				}
+			}
+		},
+		"commands": [
+			{
+				"title": "Fix all auto-fixable Problems",
+				"category": "JavaScript Standard Style",
+				"command": "standard.executeAutofix"
+			},
+			{
+				"title": "Enable JavaScript Standard Style for this Workspace",
+				"category": "JavaScript Standard Style",
+				"command": "standard.enable"
+			},
+			{
+				"title": "Disable JavaScript Standard Style for this Workspace",
+				"category": "JavaScript Standard Style",
+				"command": "standard.disable"
+			},
+			{
+				"title": "Show Output Channel",
+				"category": "JavaScript Standard Style",
+				"command": "standard.showOutputChannel"
+			}
+		],
+		"jsonValidation": [
+			{
+				"fileMatch": "package.json",
+				"url": "http://json.schemastore.org/package"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublishs": "cd client && npm run update-vscode && cd .. && npm run compile",
+		"compile:client": "tsc -p ./client/tsconfig.json",
+		"compile:server": "tsc -p ./server/tsconfig.json",
+		"watch:client": "tsc -w -p ./client/tsconfig.json",
+		"watch:server": "tsc -w -p ./server/tsconfig.json",
+		"compile": "npm run compile:client && npm run compile:server",
+		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+		"package": "vsce package"
+	},
+	"devDependencies": {
+		"@types/node": "6.0.88",
+		"typescript": "^2.4.2",
+		"vsce": "^1.44.0"
+	},
+	"dependencies": {
+		"async": "^2.5.0"
+	},
+	"__metadata": {
+		"id": "6afc37b9-362f-4bd8-9a0d-9d24eade270d",
+		"publisherId": "92c9e5ec-8701-4679-ade5-8c7609963c83",
+		"publisherDisplayName": "Sam Chen",
+		"targetPlatform": "undefined",
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"preRelease": false,
+		"installedTimestamp": 1652917028627
+	}
+}
